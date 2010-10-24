@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <title>Water in the West - California flows</title>
+</head>
+<body>
+
+  <div id="cm-example" style="width: 1400px; height: 740px"></div>
+
+  <script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+  <script type="text/javascript">
+    var cloudmade = new CM.Tiles.CloudMade.Web({key: 'f959c281de0346a38d634933ae3a5955'}); // my key
+//	var cloudmade = new CM.Tiles.CloudMade.Web({key: 'BC9A493B41014CAABB98F0471D759707'}); // base key
+	    var map = new CM.Map('cm-example', cloudmade);
+	    map.setCenter(new CM.LatLng(37.7533,-122.4293), 6); // SF
+	
+	map.addControl(new CM.LargeMapControl());
+	map.addControl(new CM.ScaleControl());
+	map.addControl(new CM.OverviewMapControl());
+	
+	var samplePoints = [];
+		for (var i = 0; i < 48; i++) {
+			samplePoints[i] = [];
+		}
+
+	samplePoints[0][1]=32.70532655; samplePoints[0][2]=-114.968023; samplePoints[0][3]=09527600; samplePoints[0][0]="ALL-AMERICAN CN BL DROP 1 NR CALEXICO, CA";
+	samplePoints[1][1]=35.848577; samplePoints[1][2]=-116.2300238; samplePoints[1][3]=10251300; samplePoints[1][0]="AMARGOSA RV AT TECOPA, CA";
+	samplePoints[2][1]=35.79021765; samplePoints[2][2]=-116.2061887; samplePoints[2][3]=10251330; samplePoints[2][0]="AMARGOSA RV ABV CHINA RANCH WASH NR TECOPA, CA";
+	samplePoints[3][1]=33.19892768; samplePoints[3][2]=-115.5969343; samplePoints[3][3]=10254730; samplePoints[3][0]="ALAMO R NR NILAND CA";
+	samplePoints[4][1]=33.7600211; samplePoints[4][2]=-116.5500155; samplePoints[4][3]=10259000; samplePoints[4][0]="ANDREAS C NR PALM SPRINGS CA";
+	samplePoints[5][1]=33.49835999; samplePoints[5][2]=-117.6658843; samplePoints[5][3]=11047300; samplePoints[5][0]="ARROYO TRABUCO A SAN JUAN CAPISTRANO CA";
+	samplePoints[6][1]=33.67890959; samplePoints[6][2]=-117.7142187; samplePoints[6][3]=11048200; samplePoints[6][0]="AGUA CHINON WASH NR IRVINE CA";
+	samplePoints[7][1]=34.22222629; samplePoints[7][2]=-118.1775727; samplePoints[7][3]=11098000; samplePoints[7][0]="ARROYO SECO NR PASADENA CA";
+	samplePoints[8][1]=34.4247189; samplePoints[8][2]=-119.811805; samplePoints[8][3]=11120000; samplePoints[8][0]="ATASCADERO C NR GOLETA CA";
+	samplePoints[9][1]=34.61831975; samplePoints[9][2]=-120.120703; samplePoints[9][3]=11128250; samplePoints[9][0]="ALAMO PINTADO C NR SOLVANG CA";
+	samplePoints[10][1]=34.54887705; samplePoints[10][2]=-120.1301473; samplePoints[10][3]=11128300; samplePoints[10][0]="ALISAL RES NR SOLVANG CA";
+	samplePoints[11][1]=36.23746164; samplePoints[11][2]=-121.4816027; samplePoints[11][3]=11151870; samplePoints[11][0]="ARROYO SECO NR GREENFIELD CA";
+	samplePoints[12][1]=36.28052076; samplePoints[12][2]=-121.3227063; samplePoints[12][3]=11152000; samplePoints[12][0]="ARROYO SECO NR SOLEDAD CA";
+	samplePoints[13][1]=36.39968708; samplePoints[13][2]=-121.3240962; samplePoints[13][3]=11152050; samplePoints[13][0]="ARROYO SECO BL RELIZ C NR SOLEDAD CA";
+	samplePoints[14][1]=37.4974356; samplePoints[14][2]=-121.7735644; samplePoints[14][3]=11172945; samplePoints[14][0]="ALAMEDA C AB DIV DAM NR SUNOL CA";
+	samplePoints[15][1]=37.4986111; samplePoints[15][2]=-121.7794444; samplePoints[15][3]=11172955; samplePoints[15][0]="ALAMEDA C BL DIV DAM NR SUNOL CA";
+	samplePoints[16][1]=37.46160337; samplePoints[16][2]=-121.769397; samplePoints[16][3]=11173200; samplePoints[16][0]="ARROYO HONDO NR SAN JOSE CA";
+	samplePoints[17][1]=37.5035472; samplePoints[17][2]=-121.8246774; samplePoints[17][3]=11173510; samplePoints[17][0]="ALAMEDA C BL CALAVERAS C NR SUNOL CA";
+	samplePoints[18][1]=37.5404908; samplePoints[18][2]=-121.856345; samplePoints[18][3]=11173575; samplePoints[18][0]="ALAMEDA C BL WELCH C NR SUNOL CA";
+	samplePoints[19][1]=37.56132196; samplePoints[19][2]=-121.6838389; samplePoints[19][3]=11176400; samplePoints[19][0]="ARROYO VALLE BL LANG CN NR LIVERMORE CA";
+	samplePoints[20][1]=37.62326509; samplePoints[20][2]=-121.7588418; samplePoints[20][3]=11176500; samplePoints[20][0]="ARROYO VALLE NR LIVERMORE CA";
+	samplePoints[21][1]=37.62659915; samplePoints[21][2]=-121.8830126; samplePoints[21][3]=11176900; samplePoints[21][0]="ARROYO DE LA LAGUNA A VERONA CA";
+	samplePoints[22][1]=37.58715679; samplePoints[22][2]=-121.960793; samplePoints[22][3]=11179000; samplePoints[22][0]="ALAMEDA C NR NILES CA";
+	samplePoints[23][1]=37.58576818; samplePoints[23][2]=-122.0482955; samplePoints[23][3]=11180700; samplePoints[23][0]="ALAMEDA C FLOOD CHANNEL A UNION CITY CA";
+	samplePoints[24][1]=40.56876198; samplePoints[24][2]=-122.381397; samplePoints[24][3]=11370700; samplePoints[24][0]="ANDERSON-COTTONWOOD ID CN AT SHARON AVE REDDING CA";
+	samplePoints[25][1]=38.6883333; samplePoints[25][2]=-121.1675; samplePoints[25][3]=11446220; samplePoints[25][0]="AMERICAN R BL FOLSOM DAM NR FOLSOM CA";
+	samplePoints[26][1]=38.6354601; samplePoints[26][2]=-121.2277262; samplePoints[26][3]=11446500; samplePoints[26][0]="AMERICAN R A FAIR OAKS CA";
+	samplePoints[27][1]=38.59129436; samplePoints[27][2]=-121.3327288; samplePoints[27][3]=11446700; samplePoints[27][0]="AMERICAN R A WILLIAM B POND PARK A CARMICHAEL CA";
+	samplePoints[28][1]=38.5671281; samplePoints[28][2]=-121.3882857; samplePoints[28][3]=11446980; samplePoints[28][0]="AMERICAN R BL WATT AVE BRDG NR CARMICHAEL CA";
+	samplePoints[29][1]=38.64184848; samplePoints[29][2]=-121.3827302; samplePoints[29][3]=11447360; samplePoints[29][0]="ARCADE C NR DEL PASO HEIGHTS CA";
+	samplePoints[30][1]=38.5065797; samplePoints[30][2]=-123.0697239; samplePoints[30][3]=11467200; samplePoints[30][0]="AUSTIN C NR CAZADERO CA";
+	samplePoints[31][1]=34.1283333; samplePoints[31][2]=-117.2713889; samplePoints[31][3]=340742117161701; samplePoints[31][0]="GILBERT ST PRECIP GAGE A SAN BERNARDINO CA";
+	samplePoints[32][1]=34.14777778; samplePoints[32][2]=-116.678611; samplePoints[32][3]=340852116404301; samplePoints[32][0]="MORONGO RIDGE PRECIP GAGE NR MORONGO VALLEY CA";
+	samplePoints[33][1]=34.22; samplePoints[33][2]=-118.29; samplePoints[33][3]=341312118172401; samplePoints[33][0]="VERDUGO RIDGE PRECIP GAGE NR BURBANK CA";
+	samplePoints[34][1]=34.2525; samplePoints[34][2]=-117.5252778; samplePoints[34][3]=341509117312601; samplePoints[34][0]="MF LYTLE C PRECIP GAGE NR LYTLE CREEK CA";
+	samplePoints[35][1]=34.2533333; samplePoints[35][2]=-117.1727778; samplePoints[35][3]=341512117102201; samplePoints[35][0]="CEDAR GLEN PRECIP GAGE A LAKE ARROWHEAD CA";
+	samplePoints[36][1]=34.2625; samplePoints[36][2]=-117.211111; samplePoints[36][3]=341545117124001; samplePoints[36][0]="BERNINA DRIVE PRECIP GAGE A LAKE ARROWHEAD CA";
+	samplePoints[37][1]=34.26388889; samplePoints[37][2]=-117.4013889; samplePoints[37][3]=341556117240601; samplePoints[37][0]="RIDGE TOP PRECIP GAGE NR DEVORE CA";
+	samplePoints[38][1]=34.2672222; samplePoints[38][2]=-117.1844444; samplePoints[38][3]=341602117110401; samplePoints[38][0]="WILLOW C PRECIP GAGE A LAKE ARROWHEAD CA";
+	samplePoints[39][1]=34.2725; samplePoints[39][2]=-117.385; samplePoints[39][3]=341621117230601; samplePoints[39][0]="SUGAR PINE RANCH PRECIP GAGE NR DEVORE CA";
+	samplePoints[40][1]=34.28916667; samplePoints[40][2]=-117.2147222; samplePoints[40][3]=341721117125301; samplePoints[40][0]="ROCK CAMP PRECIP GAGE NR LAKE ARROWHEAD CA";
+	samplePoints[41][1]=34.4416642; samplePoints[41][2]=-119.7406934; samplePoints[41][3]=342630119442301; samplePoints[41][0]="004N027W08M005S";
+	samplePoints[42][1]=34.4486111; samplePoints[42][2]=-119.8402778; samplePoints[42][3]=342655119502501; samplePoints[42][0]="SAN PEDRO C ALERT PRECIP A GOLETA CA";
+	samplePoints[43][1]=34.48694444; samplePoints[43][2]=-119.8379167; samplePoints[43][3]=342913119501601; samplePoints[43][0]="SAN PEDRO ALERT PRECIP NR GOLETA CA";
+	samplePoints[44][1]=34.50138889; samplePoints[44][2]=-119.8513889; samplePoints[44][3]=343005119510501; samplePoints[44][0]="WEST CAMINO CIELO ALERT PRECIP NR GOLETA CA";
+	samplePoints[45][1]=34.5222222; samplePoints[45][2]=-118.8925; samplePoints[45][3]=343120118533301; samplePoints[45][0]="REDROCK C PRECIP GAGE NR FILLMORE CA";
+	samplePoints[46][1]=34.66027778; samplePoints[46][2]=-118.7641667; samplePoints[46][3]=343936118454701; samplePoints[46][0]="PYRAMID LK PRECIP GAGE NR CASWELL CA";
+	samplePoints[47][1]=34.67944444; samplePoints[47][2]=-118.8416667; samplePoints[47][3]=344010118500601; samplePoints[47][0]="PIRU C PRECIP GAGE NR CASWELL CA";
+
+
+//	document.writeln(samplePoints+'<BR>'); // dump for debugging
+		
+	var markers = [];
+	for (var i = 0; i < samplePoints.length; i++) {
+		var myMarker = new CM.Marker(new CM.LatLng(samplePoints[i][1], samplePoints[i][2]),
+								   { title: samplePoints[i][0] });
+		
+		markers.push(myMarker);
+//		map.addOverlay(myMarker); // Only used if the clusterer is not to overlay the markers.
+	}
+	
+	var clusterer = new CM.MarkerClusterer(map, {clusterRadius: 70});
+	clusterer.addMarkers(markers);
+
+  </script>
+
+</body>
+</html>
