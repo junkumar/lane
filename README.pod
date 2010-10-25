@@ -10,8 +10,10 @@ Visualizations for the Bill Lane Center for the West, Stanford University.
 Fall 2010.
 
 =head1 DESCRIPTION
+
 The files now are simply a reflection of the current work by Nandu 
 for the lane center. More organization to come as the project gets bigger.
+
 =head1 BUGS
 
 You better believe it.
