@@ -5,43 +5,124 @@
 </head>
 <body>
 
+<!-- Full Screen
   <div id="cm-example" style="width: 1400px; height: 740px"></div>
+!-->
+
+<!-- Laptop Screen 
+!-->
+<div id="rivers" style="width: 660px; height: 740px"></div>
 
 <script type="text/javascript" 	src="data.js"></script>
 
 <script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
 
-<script type="text/javascript">
-    var cloudmade = new CM.Tiles.CloudMade.Web(
-	{
-		key: 'f959c281de0346a38d634933ae3a5955', 
-		"styleId":998, // stamen pale dawn
-//        styleId: 21557 // bikemap - monochrome		
-//        styleId: 997, // super simple with no state or urban markings
-	});
-	
-	var map = new CM.Map('cm-example', cloudmade);
-	map.setCenter(new CM.LatLng(37.7533,-122.4293), 6); // SF
-	
-	map.addControl(new CM.LargeMapControl());
-	map.addControl(new CM.ScaleControl());
-	map.addControl(new CM.OverviewMapControl());
-	
-//    document.writeln(sites+'<BR>'); // dump for debugging
+<script type = "text/javascript">
 
-	var markers = [];
-	for (var i = 0; i < sites.length; i++) {
-		var myMarker = new CM.Marker(new CM.LatLng(sites[i][2], sites[i][3]),
-								   { title: sites[i][1] });
-		
-		markers.push(myMarker);
-//		map.addOverlay(myMarker); // Only used if the clusterer is not to overlay the markers.
+var cloudmade = new CM.Tiles.CloudMade.Web(
+{
+    key: 'f959c281de0346a38d634933ae3a5955',
+    "styleId": 998,
+    // stamen pale dawn
+    //        styleId: 21557 // bikemap - monochrome		
+    //        styleId: 997, // super simple with no state or urban markings
+});
+
+var map = new CM.Map('rivers', cloudmade);
+map.setCenter(new CM.LatLng(37.7533, -122.4293), 7); // SF
+
+map.addControl(new CM.LargeMapControl());
+map.addControl(new CM.ScaleControl());
+map.addControl(new CM.OverviewMapControl());
+
+var icon = new CM.Icon();
+icon.image = "darkgray-circle-icon-10.png";
+//icon.image = "gray-circle-icon-12.png";
+icon.iconSize = new CM.Size(7, 7);
+icon.shadowSize = new CM.Size(0, 0);
+
+var markers = [];
+for (var i = 0; i < sites.length; i++) {
+    var myMarker = new CM.Marker(new CM.LatLng(sites[i][2], sites[i][3]),
+    {
+        title: sites[i][1],
+        icon: icon
+    });
+
+    markers.push(myMarker);
+    // Only used if the clusterer is not to overlay the markers.
+    map.addOverlay(myMarker);
+}
+
+// Clusterer for navigating to the different sites. Size of cluster indicated with color.	
+//	var clusterer = new CM.MarkerClusterer(map, {clusterRadius: 70});
+//	clusterer.addMarkers(markers);
+
+function drawRiver(map, pattern, color) {
+    var latlngs = []; var flow = [];
+    for (var i = 0; i < sites.length; i++) {
+		var date = 5,
+			valType = "00060",
+			siteId = sites[i][0];
+
+        if (sites[i][1].match(pattern) && metrics[siteId]) {
+            latlngs.push(new CM.LatLng(sites[i][2], sites[i][3]));
+			if (!metrics[siteId] || !metrics[siteId][date] || !metrics[siteId][date][valType]) {
+				throw new Error("no metrics[] for "+ siteId+ " "+ date+ " "+ valType);
+			}
+			flow.push(metrics[siteId][date][valType]);
+        }
+    }
+//    var polyline = new CM.Polyline(latlngs, color, 20);
+//    map.addOverlay(polyline);
+
+	for (var i = 0; i < latlngs.length-1; i++) {
+		var p = makeSegmentPolygon(
+			latlngs[i],
+			flow[i], 
+			latlngs[i+1], 
+			flow[i+1], 
+			color
+		);
+		map.addOverlay(p); 		
 	}
-	
-	var clusterer = new CM.MarkerClusterer(map, {clusterRadius: 70});
-	clusterer.addMarkers(markers);
+}
 
-  </script>
+function makeSegmentPolygon(latlngfirst, size1, latlngsec, size2, color) {
+	var size2graph = function(i) {
+		// return i/12000;
+		return Math.pow(i/188000, (1/3));
+		//return Math.sqrt(i/12000);
+	}
+	size1 = size2graph(size1);
+	size2 = size2graph(size2);
+	
+    var latlngs = [
+		new CM.LatLng((latlngfirst.lat() - (size1/2)), latlngfirst.lng()),
+		new CM.LatLng((latlngfirst.lat() + (size1/2)), latlngfirst.lng()),
+		new CM.LatLng((latlngsec.lat() + (size2/2)), latlngsec.lng()),
+		new CM.LatLng((latlngsec.lat() - (size2/2)), latlngsec.lng()),
+	];
+	var latlngs2 = [new CM.LatLng(latlngfirst.lat(), latlngfirst.lng()), latlngsec];	
+//	CM.Polygon(<CM.LatLng array> latlngs, <String> color, <Number> weight, <Number> opacity, <String> fillColor, <Number> fillOpacity);
+	var p = new CM.Polygon(latlngs, color, 0, 0.009, color, 0.8);
+    return p;
+}
+
+drawRiver(map, 'RUSSIAN R', "yellow");
+drawRiver(map, 'SAN JOAQUIN R', "orange");
+drawRiver(map, 'KLAMATH R', "lightblue");
+drawRiver(map, 'TRUCKEE R', "darkgreen");
+drawRiver(map, 'TRINITY R', "red");
+drawRiver(map, 'SACRAMENTO R', "purple");
+drawRiver(map, 'TUOLUMNE R', "blue");
+drawRiver(map, 'MERCED R', "darkgray");
+drawRiver(map, 'COACHELLA CANAL', "darkblue");
+
+
+
+</script>
+
 
 </body>
 </html>
