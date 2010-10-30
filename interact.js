@@ -18,18 +18,16 @@ function writeObj(obj, message) {
 
 
 // Make Polys in the map
-function createPolygon(riverSeg, color, weight, opacity, fillColor, fillOpacity, opts, map) {
+function createPolygon(riverSeg, color, weight, opacity, fillColor, fillOpacity, opts, map, label) {
     //	GPolygon(<GLatLng array> latlngs, <String> color,
     //	<Number> weight, <Number> opacity, <String> fillColor,
     //	<Number> fillOpacity, opts);
 
-    var poly = new GPolygon(riverSeg, "#000000", 1, 1, "red", 0.5, {
-        clickable: false
-    });
+//    var poly = new GPolygon(riverSeg, "#000000", 1, 1, "red", 0.5, {clickable : false});
+	var poly = new GPolygon(riverSeg, color, weight, opacity, fillColor, fillOpacity, opts);
 
 
     var polys = [poly];
-    var labels = ["one"];
 
     // Listener for polygon clicks
     GEvent.addListener(map, "click",
@@ -38,7 +36,7 @@ function createPolygon(riverSeg, color, weight, opacity, fillColor, fillOpacity,
             //	writeObj(point);
             for (var i = 0; i < polys.length; i++) {
                 if (polys[i].Contains(point)) {
-                    map.openInfoWindowHtml(point, "<b>You clicked on</b> " + labels[i]);
+                    map.openInfoWindowHtml(point, label);
                 }
             }
         }
@@ -78,6 +76,7 @@ function createPolygon(riverSeg, color, weight, opacity, fillColor, fillOpacity,
 // ====== This function displays the tooltip ======
 // it can be called from an icon mousover or a side_bar mouseover
 function showTooltip(marker, map) {
+	var tooltip = document.getElementById("tooltip");    
     tooltip.innerHTML = marker.tooltip;
     var point = map.getCurrentMapType().getProjection().fromLatLngToPixel(map.getBounds().getSouthWest(), map.getZoom());
     var offset = map.getCurrentMapType().getProjection().fromLatLngToPixel(marker.getPoint(), map.getZoom());
@@ -97,19 +96,21 @@ function createMarker(point, label, html, map) {
 	
 	var icon = new GIcon(G_DEFAULT_ICON);
     icon.image = "darkgray-circle-icon-10.png";
-    //icon.image = "gray-circle-icon-12.png";
-    icon.iconSize = new GSize(10, 10);
+	//     if (map.getCurrentMapType().getName() === "Chalk") { 
+	//    icon.image = "gray-circle-icon-12.png";
+	// }
+    icon.iconSize = new GSize(9, 9);
     icon.shadowSize = new GSize(0, 0);
     icon.iconAnchor = new GPoint(3, 3);
 
-    
     var marker = new GMarker(point, {
         icon: icon
     });
 
     GEvent.addListener(marker, "click",
     function() {
-        marker.openInfoWindowHtml(html);
+//        marker.openInfoWindowHtml(html);
+        showTooltip(marker, map);
     });
 
     marker.tooltip = label;
@@ -118,9 +119,10 @@ function createMarker(point, label, html, map) {
     function() {
         showTooltip(marker, map);
     });
+
     GEvent.addListener(marker, "mouseout",
     function() {
-        tooltip.style.visibility = "hidden"
+        document.getElementById("tooltip").style.visibility = "hidden"
     });
 
     return marker;
