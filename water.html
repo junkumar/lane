@@ -52,8 +52,10 @@
 	<p>Calculated Value: <span id="d_val"></span></p> -->
 	<p>Streamflow Date: <span id="d_date"></span></p>
 
+	<div id="rivers" style="width: inherit; height: 740px; background:url(brown-board.jpg)"></div>
+<!--
 	<div id="rivers" style="width: inherit; height: 740px"></div>
-
+!-->
 </div>
 
 
@@ -61,7 +63,14 @@
 
 <script type="text/javascript" 	src="data.js"></script>
 
-<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+<!-- <script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+!-->
+
+<script src="http://js.mapbox.com/g/2/mapbox.js" type="text/javascript"></script>
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA2jOsdies-rRwCk5Dn07uHRQWQJbVXpvlj0qRyL9wDQ7bgIUSahRa_1zotstdj8qAo03KlaDCdIPoMw" type="text/javascript"></script>
+
+
 <!-- <script type="text/javascript" src="web-maps-lite.js"></script> -->
 
 
@@ -87,65 +96,86 @@
     ];
     colors_sequential.reverse();
 
+    var map = new GMap2(document.getElementById("rivers"));
+    // map.setCenter(new GLatLng(37.7533, -122.4293), 7); // SF
+    map.setCenter(new GLatLng(39.4472,-119.7363), 6); // Tahoe
+    // map.openInfoWindow(new GLatLng(39.4472,-119.7363), "Hello world", {maxWidth: 80});
+    map.setUIToDefault(); // google
 
-    var cloudmade = new CM.Tiles.CloudMade.Web(
-        {
-            key: 'f959c281de0346a38d634933ae3a5955',
-            styleId: 998, // stamen pale dawn
-            //        styleId: 21557, // bikemap - monochrome		
-            //        styleId: 997, // super simple with no state or urban markings
-            // styleId: 999,
-	          // styleId: 995, 
-        });
+// G_NORMAL_MAP displays the default road map view.
+// G_SATELLITE_MAP displays Google Earth satellite images. *
+// G_HYBRID_MAP displays a mixture of normal and satellite views.*
+// G_DEFAULT_MAP_TYPES contains an array of the above three types, useful for iterative processing.
+// G_PHYSICAL_MAP displays a physical map based on terrain information.
+    map.setMapType(G_PHYSICAL_MAP);
 
-    var map = new CM.Map('rivers', cloudmade);
-    // map.setCenter(new CM.LatLng(37.7533, -122.4293), 7); // SF
-    map.setCenter(new CM.LatLng(39.4472,-119.7363), 6); // Tahoe
-    // map.openInfoWindow(new CM.LatLng(39.4472,-119.7363), "Hello world", {maxWidth: 80});
 
-    map.addControl(new CM.SmallMapControl()); 
-    // map.addControl(new CM.ScaleControl());
-    // map.addControl(new CM.OverviewMapControl());
+// MapBox custom map
+      /** Customize these variable as needed **/
+      var layername = "world-glass";
+      var layer_title = "World Light";
+      var file_extension = "png";
+      var min_zoom = 5;
+      var max_zoom = 9;
+
+      /** Add custom map type **/
+//    var options = {minZoom: min_zoom, maxZoom: max_zoom, overlay:true, type: 'png', opacity: 100.0};
+//      var customoverlay = GMapBox(layername, layer_title, options);
+//      map.addOverlay(customoverlay);
+//      map.setMapType(custommap);
+
+    // map.removeControl();
+    // map.addControl(new GSmallMapControl()); 
+    // map.addControl(new GScaleControl());
+    // map.addControl(new GOverviewMapControl());
     // map.addControl(new CM.TileLayerControl());
-    map.addControl(new CM.PermalinkControl()); 
+    // map.addControl(new GNavLabelControl()); 
 
-    var icon = new CM.Icon();
+    var icon = new GIcon(G_DEFAULT_ICON);
     icon.image = "darkgray-circle-icon-10.png";
     //icon.image = "gray-circle-icon-12.png";
-    icon.iconSize = new CM.Size(5, 5);
-    icon.shadowSize = new CM.Size(0, 0);
+    icon.iconSize = new GSize(8, 8);
+    icon.shadowSize = new GSize(0, 0);
 
-    function drawOnMap (flowdate) {
+    function drawOnMap (flowdate) { 
 	      
 	      // Setup the date for viewing
 	    YAHOO.util.Dom.get('d_date').innerHTML = dates[flowdate];
-		
+
 		// draw CA map
-		drawCalifornia(map);	
+		drawCalifornia(map);
 	      
-        var markers = [];
-        for (var i = 0; i < sites.length; i++) {
-            var myMarker = new CM.Marker(new CM.LatLng(sites[i][2], sites[i][3]),
-                                         {
-                                             title: sites[i][1],
-                                             icon: icon
-                                         });
+      
 
-            markers.push(myMarker);
-            // Only used if the clusterer is not to overlay the markers.
-            map.addOverlay(myMarker);
-        }
-
-        // Clusterer for navigating to the different sites. Size of cluster indicated with color.	
-        //	var clusterer = new CM.MarkerClusterer(map, {clusterRadius: 70});
-        //	clusterer.addMarkers(markers);
 
         function drawRiver(map, riverObj, color) {
 	          var pattern = riverObj.patterns[0];
             
             //  tester
-//            if (pattern != "MOKELUMNE R ")
-//              return;
+           if (pattern != "COLORADO RIVER ")
+              return;
+
+
+			// 	        var markers = [];
+			// 	        for (var i = 0; i < sites.length; i++) {
+			// 	 
+			// 	            var myMarker = new GMarker(new GLatLng(sites[i][2], sites[i][3]),
+			// 	                                         {
+			// 	                                             title: sites[i][1],
+			// 	                                             icon: icon
+			// 	                                         });
+			// 	            document.writeln(myMarker.getLatLng()+'<br>');
+			// 	
+			// 	            markers.push(myMarker);
+			// 	            // Only used if the clusterer is not to overlay the markers.
+			// 	            map.addOverlay(myMarker);
+			// }
+
+	        // Clusterer for navigating to the different sites. Size of cluster indicated with color.	
+	        //	var clusterer = new GMarkerClusterer(map, {clusterRadius: 70});
+	        //	clusterer.addMarkers(markers);
+
+
 
 	          var latlngs = []; var flow = [];
 	          for (var i = 0; i < sites.length; i++) {
@@ -154,13 +184,24 @@
 	              siteId = sites[i][0];
 
                 if (sites[i][1].match(pattern) && metrics[siteId]) {
-		                latlngs.push(new CM.LatLng(sites[i][2], sites[i][3]));
+		                latlngs.push(new GLatLng(sites[i][2], sites[i][3]));
 		                if (!metrics[siteId] || !metrics[siteId][date] ||
 		                    !metrics[siteId][date][valType]) {
 		                    throw new Error("no metrics[] for "+ siteId+ " "+
 				                                date+ " "+ valType);
 		                }
 		                flow.push(metrics[siteId][date][valType]);
+
+			            var myMarker = new GMarker(new GLatLng(sites[i][2], sites[i][3]),
+			                                         {
+			                                             title: sites[i][1],
+			                                             icon: icon
+			                                         });
+			            document.writeln(myMarker.getLatLng()+'<br>');
+			            // Only used if the clusterer is not to overlay the markers.
+			            map.addOverlay(myMarker);
+
+
                 }
 	          }
 
@@ -175,7 +216,7 @@
             });
 
 
-	          // var polyline = new CM.Polyline(latlngs, color, 20);
+	          // var polyline = new GPolyline(latlngs, color, 20);
 	          //    map.addOverlay(polyline);
 
 
@@ -203,40 +244,36 @@
 	          size2 = size2graph(size2);
 	          
 	          var latlngs_ew = [
-	              new CM.LatLng((latlngfirst.lat() - (size1/2)), latlngfirst.lng()),
-	              new CM.LatLng((latlngfirst.lat() + (size1/2)), latlngfirst.lng()),
-	              new CM.LatLng((latlngsec.lat() + (size2/2)), latlngsec.lng()),
-	              new CM.LatLng((latlngsec.lat() - (size2/2)), latlngsec.lng()),
+	              new GLatLng((latlngfirst.lat() - (size1/2)), latlngfirst.lng()),
+	              new GLatLng((latlngfirst.lat() + (size1/2)), latlngfirst.lng()),
+	              new GLatLng((latlngsec.lat() + (size2/2)), latlngsec.lng()),
+	              new GLatLng((latlngsec.lat() - (size2/2)), latlngsec.lng()),
 	          ];
 
 	          var latlngs_ns = [
-	              new CM.LatLng((latlngfirst.lat()), latlngfirst.lng() - (size1/2)),
-	              new CM.LatLng((latlngfirst.lat()), latlngfirst.lng() + (size1/2)),
-	              new CM.LatLng((latlngsec.lat()), (latlngsec.lng() + (size2/2))),
-	              new CM.LatLng((latlngsec.lat()), (latlngsec.lng() - (size2/2))),
+	              new GLatLng((latlngfirst.lat()), latlngfirst.lng() - (size1/2)),
+	              new GLatLng((latlngfirst.lat()), latlngfirst.lng() + (size1/2)),
+	              new GLatLng((latlngsec.lat()), (latlngsec.lng() + (size2/2))),
+	              new GLatLng((latlngsec.lat()), (latlngsec.lng() - (size2/2))),
 	          ];
 
-	          var latlngs_test = [new CM.LatLng(latlngfirst.lat(), latlngfirst.lng()), latlngsec];	
-	          //	CM.Polygon(<CM.LatLng array> latlngs, <String> color,
+	          var latlngs_test = [new GLatLng(latlngfirst.lat(), latlngfirst.lng()), latlngsec];	
+	          //	GPolygon(<GLatLng array> latlngs, <String> color,
 	          //	<Number> weight, <Number> opacity, <String> fillColor,
 	          //	<Number> fillOpacity);
 
             var latlngs = latlngs_ns;
             if ( dir === "S" || dir === "N" )
-                latlngs = latlngs_ns;
+                latlngs = latlngs_ew;
             else 
                 latlngs = latlngs_ew;
 
 // debugging
-//            document.writeln(latlngfirst+'<t>'+latlngsec+'<t>'+'<br>');
-//            document.writeln(latlngs+'<t>'+size1+'<t>'+size2+'<t>'+'<br><br><br>');
+            document.writeln(latlngfirst+'<t>'+latlngsec+'<t>'+'<br>');
+            document.writeln(latlngs+'<br>'+size1+'<t>'+size2+'<t>'+'<br><br><br>');
 
-	          var p = new CM.Polygon(latlngs, color, 4, 0.0, color, 0.95);
-			
-//			p.enableDrawing();
-//			p.enableEditing();
-	
-	          return p;
+	          var p = new GPolygon(latlngs, color, 4, 0.0, color, 0.95);
+		      return p;
         }
 
         for (var i=0; i < rivers.length; i++) {
@@ -264,9 +301,9 @@
     };
 
 // // #DEBUG - event listener not working yet 
-// CM.Util.extend(CM.Polygon.prototype, {
+// CM.Util.extend(GPolygon.prototype, {
 // 	enableClick: function() {
-// 		CM.Event.addListener(map, 'click',
+// 		GEvent.addListener(map, 'click',
 //         function() {
 // 			map.openInfoWindow(latlng, "River");	
 //         },
@@ -283,12 +320,12 @@ function drawCalifornia (map) {
 	for (var i = 0; i < geomAry.length; i++) 
 	{ 
 	XY = geomAry[i].split(','); 
-	points.push( new CM.LatLng(parseFloat(XY[1]),parseFloat(XY[0]))) ; 
+	points.push( new GLatLng(parseFloat(XY[1]),parseFloat(XY[0]))) ; 
 	}
-	//	CM.Polygon(<CM.LatLng array> latlngs, <String> color,
+	//	GPolygon(<GLatLng array> latlngs, <String> color,
     //	<Number> weight, <Number> opacity, <String> fillColor,
     //	<Number> fillOpacity);
-	var dynRegionPolygon = new CM.Polygon(points,'#f33f00', 0.3, 1, '#ff0000', 0.02);
+	var dynRegionPolygon = new GPolygon(points,'#f33f00', 0.3, 1, '#ff0000', 0.02);
 	map.addOverlay(dynRegionPolygon);
 } 
 		
@@ -395,23 +432,23 @@ function drawCalifornia (map) {
 	} 
 
 	function doClick (latlng) {
-		if ( this == CM.Marker ) {
+		if ( this == GMarker ) {
 			map.openInfoWindow(latlng, "Marker", {maxWidth: 80});
 		}
-		if ( this == CM.Polygon ) {
+		if ( this == GPolygon ) {
 			map.openInfoWindow(latlng, "River");
 		}
 	}
 
 
 // Tool Tips
-CM.Event.addListener(map, 'click', 
+GEvent.addListener(map, 'click', 
 function (latlng) {
 	map.openInfoWindow(latlng, "Marker", {maxWidth: 80});
-	if ( this == CM.Marker ) {
+	if ( this == GMarker ) {
 		map.openInfoWindow(latlng, "Marker", {maxWidth: 80});
 	}
-	if ( this == CM.Polygon ) {
+	if ( this == GPolygon ) {
 		map.openInfoWindow(latlng, "River");
 	}
 }
@@ -422,13 +459,13 @@ function polygonClicked(latlng) {
 }
 
 
-var originalCreateMarker = CM.Polyline.prototype._createMarker;
-CM.Polyline.prototype._createMarker = function(latlng) {
+var originalCreateMarker = GPolyline.prototype._createMarker;
+GPolyline.prototype._createMarker = function(latlng) {
 	var marker = originalCreateMarker.apply(this, latlng);
-	CM.Event.addListener(marker, 'click', 
+	GEvent.addListener(marker, 'click', 
 		function () {
 //			map.openInfoWindow(ll, "River");
-			CM.Event.fire(this, 'click');
+			GEvent.fire(this, 'click');
 		}, 
 		this);
 	return marker;
