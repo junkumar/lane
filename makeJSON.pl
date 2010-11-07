@@ -8,7 +8,8 @@ use Data::Dumper;
 
 my $dbh;
 eval {
-	$dbh = DBI->connect("dbi:SQLite:20101027.water.db");
+	$dbh = DBI->connect("dbi:SQLite:20101102.water.db");
+	#$dbh = DBI->connect("dbi:SQLite:20101027.water.db");
 };
 if ($@) {
 	die $@;
@@ -33,12 +34,12 @@ my $rivers = [
 my $metrics = $dbh->selectall_arrayref("
 	select * from metric 
 	where 
-	(
+--	(
 --		dateTime = '2010-10-16T00:00:00.000-07:00'
-			       strftime('%Y-%m', dateTime) = '2010-09' 
+--		       strftime('%Y-%m', dateTime) = '2010-09' 
 --		or	   strftime('%Y-%m-%d', dateTime) = '2010-10-15'
 --		or	   strftime('%Y-%m-%d', dateTime) = '2010-10-14'
-	) and 
+--	) and 
 	valueType = '00060' and 
 	value >= 0
 	;",
@@ -88,16 +89,16 @@ foreach my $site ( @$sites ) {
 	my ($code, $name) = ($site->[0], $site->[1]); 
 
 	for (my $i=0; $i < scalar @$rivers; $i++) {
-          foreach my $p (@{$rivers->[$i]->{patterns}}) {
-            if ($name =~ m/$p/) {
-              if (defined $peakStreamflowPerSite{$code} &&
-                  (!defined $rivers->[$i]->{peaksf} ||
-                   $peakStreamflowPerSite{$code} > $rivers->[$i]->{peaksf})) {
-                      $rivers->[$i]->{peaksf} =
-                              $peakStreamflowPerSite{$code};
-                      #remove before dump
-                      delete $peakStreamflowPerSite{$code}; 
-              }
+    foreach my $p (@{$rivers->[$i]->{patterns}}) {
+      if ($name =~ m/$p/) {
+        if (defined $peakStreamflowPerSite{$code} &&
+            (!defined $rivers->[$i]->{peaksf} ||
+             $peakStreamflowPerSite{$code} > $rivers->[$i]->{peaksf})) {
+          $rivers->[$i]->{peaksf} =
+            $peakStreamflowPerSite{$code};
+          #remove before dump
+          delete $peakStreamflowPerSite{$code}; 
+        }
       }
     }
   }
@@ -107,13 +108,17 @@ foreach my $site ( @$sites ) {
 my @sorted_rivers = sort { $b->{peaksf} <=> $a->{peaksf} } 
                     @$rivers;
 for (my $i=0; $i < scalar @sorted_rivers; $i++) {
-        $sorted_rivers[$i]->{rank} = $i+1;
+  $sorted_rivers[$i]->{rank} = $i+1;
 }
 
-
-my $revDateHash = {};
-foreach my $k (keys %$dateHash) {
-	$revDateHash->{$dateHash->{$k}} = $k;
+# Date indexes coming out of DB might not be in order. Generate an
+# ordered list by sorting at the end.
+my @sorted_dates = [];
+my @sorted_keys = sort keys %$dateHash;
+for (my $i=0; $i < scalar @sorted_keys; $i++) {
+	$sorted_dates[$i] = { ymd => $sorted_keys[$i],
+                        index => $dateHash->{$sorted_keys[$i]}
+                      }
 }
 
 open DATAJS, "> data.js" or
@@ -121,7 +126,7 @@ open DATAJS, "> data.js" or
 
 my $coder = JSON::XS->new->ascii->pretty->allow_nonref;
 print DATAJS "var rivers = ", $coder->encode (\@sorted_rivers), ";\n\n";
-print DATAJS "var dates = ", $coder->encode ($revDateHash), ";\n\n";
+print DATAJS "var dates = ", $coder->encode (\@sorted_dates), ";\n\n";
 print DATAJS "var metrics = ", $coder->encode ($metricsHash), ";\n\n";
 print DATAJS "var sites = ", $coder->encode ($sites), ";\n";
 

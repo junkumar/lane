@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title>Google Maps</title>
@@ -15,26 +15,24 @@
 		text-align: center;
       }
     </style>
-
   </head>
   <body onunload="GUnload()">
-
+    
     <div id="map" style="width: 550px; height: 450px">
-    	<div id="tooltip">
-    </div>
-
-    <noscript><b>JavaScript must be enabled in order for you to use Google Maps.</b> 
+      <div id="tooltip">
+      </div>
+      
+      <noscript><b>JavaScript must be enabled in order for you to use Google Maps.</b> 
       However, it seems JavaScript is either disabled or not supported by your browser. 
       To view Google Maps, enable JavaScript by changing your browser options, and then 
       try again.
-    </noscript>
- 
-<script src="interact.js"></script>
-    <script type="text/javascript">
-runTestOverlays();
+      </noscript>
+    </div>
+
+    <script src="interact.js" type="text/javascript">
+      runTestOverlays();
     </script>
   </body>
-
 </html>
 
 

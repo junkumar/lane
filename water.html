@@ -3,19 +3,20 @@
 
   <head>
     <title>Water in the West - Streamflow in California Rivers</title>
-    
+
     <!-- Combo-handled YUI CSS files: -->
     <link rel="stylesheet" type="text/css"
           href="http://yui.yahooapis.com/combo?2.8.2r1/build/fonts/fonts-min.css&2.8.2r1/build/reset/reset-min.css&2.8.2r1/build/grids/grids-min.css&2.8.2r1/build/base/base-min.css&2.8.2r1/build/slider/assets/skins/sam/slider.css&2.8.2r1/build/logger/assets/skins/sam/logger.css"
           />
     <style type="text/css">
+      /* <![CDATA[ */
 
       #slider-bg {
           background:url(http://yui.yahooapis.com/2.8.2r1/build/slider/assets/bg-fader.gif) 5px 0 no-repeat;
           width: 220px;
           height: 30px;
           left: 20;
-     }
+      }
 
       #slider-thumb {
           left:20;
@@ -43,9 +44,10 @@
 
       #fright {
           text-align: right;
-     }
+      }
 
-     </style>
+      /* ]]> */
+    </style>
   </head>
   <body>
     <!-- Layout CSS is from YUI - useful tool at http://developer.yahoo.com/yui/grids/builder/ -->
@@ -57,7 +59,7 @@
       the daily, mean streamflow observed and is not related directly to
       the width or physical size of the river at that point.<br /><br />
       </div>
-      
+
       <div id="bd" role="main">
         <div class="yui-g">
           <div class="yui-u first">
@@ -75,7 +77,7 @@
             San Joaquin River, Peak Streamflow - 483,000 cu ft/s <br />
           </div>
         </div>
-        
+
         <div class="yui-g">
           <div id="rivers" style="width: inherit; height: 740px; background:url(brown-board.jpg)">
           </div>
@@ -93,18 +95,18 @@
           <div id="fright" class="yui-u">
             By Nandu Jayakumar (nandu@cs.stanford.edu), Yinfeng Qin &amp; Geoff Mcghee <br />
             Bill Lane Center for the West, Stanford University <br />
-	    Live version at <a href="http://www.stanford.edu/~nandu/water.html">www.stanford.edu/~nandu/water.html</a> <br />
-	    Code at <a href="http://github.com/junkumar/lane">http://github.com/junkumar/lane/</a>
+            Live version at <a href="http://www.stanford.edu/~nandu/water.html">www.stanford.edu/~nandu/water.html</a> <br />
+            Code at <a href="http://github.com/junkumar/lane">http://github.com/junkumar/lane/</a>
           </div>
         </div>
-        
+
       </div><!-- bd -->
 
       <div id="ft" role="contentinfo"></div>
 
-    </div><!-- doc3 -->          
-    
-    
+    </div><!-- doc3 -->
+
+
     <noscript>
       <b>JavaScript must be enabled in order for you to use this web application or Google Maps.</b>
       However, it seems JavaScript is either disabled or not supported by your browser.
@@ -117,12 +119,12 @@
 <!-- Combo-handled YUI JS files:  -->
 <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.8.2r1/build/yahoo/yahoo-debug.js&2.8.2r1/build/dom/dom-debug.js&2.8.2r1/build/event/event-debug.js&2.8.2r1/build/dragdrop/dragdrop-debug.js&2.8.2r1/build/slider/slider-debug.js&2.8.2r1/build/logger/logger-debug.js"></script>
 
-<!-- www.stanford.edu/~nandu/water.html -->    
+<!-- www.stanford.edu/~nandu/water.html -->
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA2jOsdies-rRwCk5Dn07uHRSFi4l5qBrYbO-dV0XBvKlyBvk5SRTWd-5RL2-lxMoetw04c1M92My0ZA" type="text/javascript"></script>
 
-<!-- local water.html 
+<!-- local water.html
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA2jOsdies-rRwCk5Dn07uHRQWQJbVXpvlj0qRyL9wDQ7bgIUSahRa_1zotstdj8qAo03KlaDCdIPoMw" type="text/javascript"></script>
--->    
+-->
 
 <script type="text/javascript"         src="data.js"></script>
 <!-- Need to load google maps api js before interact.js !-->
@@ -133,6 +135,7 @@
 <script src="http://js.mapbox.com/g/2/mapbox.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+/* <![CDATA[ */
 
 if (GBrowserIsCompatible()) {
     // http://colorbrewer2.org/index.php?type=qualitative&scheme=Set1&n=9
@@ -201,10 +204,10 @@ if (GBrowserIsCompatible()) {
     tooltip.style.visibility = "hidden";
 
 
-    function drawOnMap (flowdate) {
+    function drawOnMap (dateIndex) {
 
         // Setup the date for viewing
-        var display_date = dates[flowdate];
+        var display_date = dates[dateIndex]["ymd"];
         YAHOO.util.Dom.get('d_date').innerHTML = display_date;
 
         // draw CA map
@@ -220,7 +223,7 @@ if (GBrowserIsCompatible()) {
 
             var latlngs = []; var flow = [];
             for (var i = 0; i < sites.length; i++) {
-                var date = flowdate,
+                var date = dates[dateIndex]["index"],
                 valType = "00060",
                 siteId = sites[i][0];
 
@@ -228,8 +231,11 @@ if (GBrowserIsCompatible()) {
                     latlngs.push(new GLatLng(sites[i][2], sites[i][3]));
                     if (!metrics[siteId] || !metrics[siteId][date] ||
                         !metrics[siteId][date][valType]) {
-                        throw new Error("no metrics[] for "+ siteId+ " "+
+//                        throw new Error("no metrics[] for "+ siteId+ " "+
+//                                        date+ " "+ valType);
+                        console.log("no metrics[] for "+ siteId+ " "+
                                         date+ " "+ valType);
+                      continue;
                     }
                     flow.push(metrics[siteId][date][valType]);
 
@@ -422,7 +428,7 @@ if (GBrowserIsCompatible()) {
                                   function(offsetFromStart) {
                                       var sfdate = Dom.get('d_date');
                                       var actualValue = slider.getRealValue();
-                                      sfdate.innerHTML = dates[actualValue];
+                                      sfdate.innerHTML = dates[actualValue]["ymd"];
 
                                       // Change date and redraw map
                                       map.clearOverlays();
@@ -478,20 +484,18 @@ else {
     alert("Sorry, the Google Maps API and hence, this web application are not compatible with this browser");
 }
 
-</script>
-
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-<script type="text/javascript">
-    var pageTracker = _gat._getTracker("UA-11926785-2");
-    pageTracker._trackPageview();
+    // Google Analytics Tracking
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    // The if ensures that there is no failure in the case of an adblocker
+    if (typeof(_gat) == 'object') {
+        var pageTracker = _gat._getTracker("UA-11926785-2");
+        pageTracker._trackPageview();
+    }
+/* ]]> */
 </script>
 
   </body>
-
 </html>
 
 <!--
@@ -505,8 +509,5 @@ How do you encode the direction of the river ? Alpha ?
 - distortion due to occlusion - overlaps - hence a scale slider
  - sort largest to smallest to show detail
  - also can use transparency !!
-
-
-Cool NY art - http://sta.mn/qk5
 
 !-->
