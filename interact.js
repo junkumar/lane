@@ -55,7 +55,7 @@ function createPolygon(riverSeg, color, weight, opacity, fillColor, fillOpacity,
 			       }
 			   }
 		       });
-    
+
     // Listener for polygon mouseout
     GEvent.addListener(poly, "mouseout",
 		       function(point) {
@@ -72,10 +72,10 @@ function createPolygon(riverSeg, color, weight, opacity, fillColor, fillOpacity,
     return poly;
 }
 
-//  This function displays the tooltip 
+//  This function displays the tooltip
 // it can be called from an icon mousover or a side_bar mouseover
 function showTooltip(marker, map) {
-    var tooltip = document.getElementById("tooltip");    
+    var tooltip = document.getElementById("tooltip");
     tooltip.innerHTML = marker.tooltip;
     var point =
         map.getCurrentMapType().getProjection().fromLatLngToPixel(map.getBounds().getSouthWest(),
@@ -84,12 +84,12 @@ function showTooltip(marker, map) {
     var offset =
         map.getCurrentMapType().getProjection().fromLatLngToPixel(marker.getPoint(),
                                                                   map.getZoom());
-    
+
     var anchor = marker.getIcon().iconAnchor;
     var width = marker.getIcon().iconSize.width;
-    var pos = new GControlPosition(G_ANCHOR_BOTTOM_LEFT, 
+    var pos = new GControlPosition(G_ANCHOR_BOTTOM_LEFT,
                                    new GSize(offset.x - point.x -
-                                             anchor.x + width, 
+                                             anchor.x + width,
                                              -offset.y + point.y +
                                              anchor.y));
     pos.apply(tooltip);
@@ -104,7 +104,7 @@ function showTooltip(marker, map) {
 function createMarker(point, label, html, map) {
     var icon = new GIcon(G_DEFAULT_ICON);
     icon.image = "darkgray-circle-icon-10.png";
-    // if (map.getCurrentMapType().getName() === "Chalk") { 
+    // if (map.getCurrentMapType().getName() === "Chalk") {
     //    icon.image = "gray-circle-icon-12.png";
     // }
     icon.iconSize = new GSize(9, 9);
@@ -114,23 +114,23 @@ function createMarker(point, label, html, map) {
     var marker = new GMarker(point, {
         icon: icon
     });
-    
+
     GEvent.addListener(marker, "click",
                        function() {
                            // marker.openInfoWindowHtml(html);
                            showTooltip(marker, map);
                        });
-    
+
     marker.tooltip = label;
-    //    The new marker "mouseover" and "mouseout" listeners  
+    //    The new marker "mouseover" and "mouseout" listeners
     GEvent.addListener(marker, "mouseover",
 		       function() {
 			   showTooltip(marker, map);
 		       });
-    
+
     GEvent.addListener(marker, "mouseout",
                        function() {
-                           document.getElementById("tooltip").style.visibility = "hidden"
+                         document.getElementById("tooltip").style.visibility = "hidden";
                        });
     return marker;
 }
@@ -158,7 +158,7 @@ GPolygon.prototype.Contains = function(point) {
         }
     }
     return oddNodes;
-}
+};
 
 
 // Main function that is a non-automated test
@@ -171,7 +171,7 @@ function runTestOverlays() {
         map.setCenter(new GLatLng(32.8122666, -114.5149494), 8);
 
 
-        // Set up marker mouseover tooltip div 
+        // Set up marker mouseover tooltip div
         var tooltip = document.createElement("div");
         document.getElementById("map").appendChild(tooltip);
         //                        tooltip.style.backgroundColor="#e0e0e0";
@@ -197,12 +197,12 @@ function runTestOverlays() {
         map.addOverlay(marker);
 
         var point2 = new GLatLng(33.71946626, -114.4980105);
-        var marker = createMarker(point2, "2", point2.toUrlValue(), map);
-        map.addOverlay(marker);
+        var marker2 = createMarker(point2, "2", point2.toUrlValue(), map);
+        map.addOverlay(marker2);
 
         var point3 = new GLatLng(32.8122666, -114.5149494);
-        var marker = createMarker(point3, "3", point3.toUrlValue(), map);
-        map.addOverlay(marker);
+        var marker3 = createMarker(point3, "3", point3.toUrlValue(), map);
+        map.addOverlay(marker3);
 
     }
 

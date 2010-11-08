@@ -72,37 +72,36 @@ if (GBrowserIsCompatible()) {
         function drawRiver(map, riverObj, color) {
             var pattern = riverObj.patterns[0];
 
-            //  #DEBUG
-            //           if (pattern != "COLORADO RIVER ")
-            //              return;
+            // #DEBUG
+	    // if (pattern != "COLORADO RIVER ")
+	    //     return;
 
-            var latlngs = []; var flow = [];
+	    var sensors = []; // Array of objects
             for (var i = 0; i < sites.length; i++) {
                 var date = dates[dateIndex]["index"],
                 valType = "00060",
                 siteId = sites[i][0];
 
                 if (sites[i][1].match(pattern) && metrics[siteId]) {
-                    latlngs.push(new GLatLng(sites[i][2], sites[i][3]));
                     if (!metrics[siteId] || !metrics[siteId][date] ||
                         !metrics[siteId][date][valType]) {
                         console.log("no metrics[] for "+ siteId+ " "+
                                     date+ " "+ valType);
                         continue;
                     }
-                    flow.push(metrics[siteId][date][valType]);
 
                     var point2 = new GLatLng(sites[i][2], sites[i][3]);
+		    var flow2 = metrics[siteId][date][valType];
+		    sensors.push({latlngs: point2,
+			          flow: flow2});
 
                     var tooltip_marker_html =
                         "<b>Sensor Location: " + sites[i][1] + "</b><br>" +
                         "USGS Sensor Code: " + siteId + "<br>" +
                         "Streamflow for " + display_date + ": " +
-                        metrics[siteId][date][valType] + " cu. ft/s<br>"
+                        flow2 + " cu. ft/s<br>"
                     ;
 
-                    // var myMarker = createMarker(point2, sites[i][1],
-                    //                             point2.toUrlValue(), map);
                     var myMarker = createMarker(point2, tooltip_marker_html,
                                                 tooltip_marker_html, map);
                     // #DEBUG document.writeln(myMarker.getLatLng()+'<br>');
@@ -113,25 +112,24 @@ if (GBrowserIsCompatible()) {
 
 
             // sort the sensor sites so that polygons are drawn correctly
-            latlngs.sort(function (a, b) {
+            sensors.sort(function (a, b) {
                              if (riverObj.flowdirection === "N" ||
                                  riverObj.flowdirection === "S")
-                                 return a.lat() - b.lat();
+                                 return a.latlngs.lat() - b.latlngs.lat();
                              else // E W
-                                 return a.lng() - b.lng();
+                                 return a.latlngs.lng() - b.latlngs.lng();
                          });
 
-            // #DEBUG
+            // #Debug
             // var polyline = new GPolyline(latlngs, color, 20);
             //    map.addOverlay(polyline);
 
-
-            for (var i = 0; i < latlngs.length-1; i++) {
+            for (var j = 0; j < sensors.length-1; j++) {
                 var p = makeSegmentPolygon(
-                    latlngs[i],
-                    flow[i],
-                    latlngs[i+1],
-                    flow[i+1],
+                    sensors[j].latlngs,
+                    sensors[j].flow,
+                    sensors[j+1].latlngs,
+                    sensors[j+1].flow,
                     color,
                     riverObj
                 );
@@ -144,13 +142,16 @@ if (GBrowserIsCompatible()) {
             var dir = river.flowdirection;
 
             var size2graph = function(i) {
-                // return Math.log(i/1000)/5; - gives -ve numbers
+                // return Math.log(i)/5; // need to be careful with -ve numbers
                 return Math.pow(i/12000, (1/3));
+	        // return i/1000;
                 // return Math.sqrt(i/12000);
             };
 
             size1 = size2graph(size1);
             size2 = size2graph(size2);
+	    // #DEBUG
+            // document.writeln('size1&nbsp;'+size1+'&nbsp;size2&nbsp;'+size2+'<br>');
 
             var latlngs_ew = [
                 new GLatLng((latlngfirst.lat() - (size1/2)), latlngfirst.lng()),
@@ -177,8 +178,8 @@ if (GBrowserIsCompatible()) {
             var tooltip_html =
                 "<b>" + river.name + "</b><br>" +
                 "Length: " + river.length + " miles<br>" +
-                "Peak Streamflow: " + river.peaksf + " cu. ft/s<br>" +
-                "Rank: " + river.rank + "<br>"
+                "Peak Streamflow (wiki): " + river.peaksf + " cu. ft/s<br>" +
+                "Rank (in current data): " + river.rank + "/" + rivers.length + "<br>"
             ;
             // #DEBUG
             // document.writeln(latlngfirst+'<t>'+latlngsec+'<t>'+'<br>');
@@ -186,7 +187,7 @@ if (GBrowserIsCompatible()) {
 
             // var p = new GPolygon(latlngs, color, 4, 0.0, color, 0.95);
             var p = createPolygon(latlngs, color, 16, 0.0, color,
-                                  0.95, { clickable: false }, map, tooltip_html);
+                                  0.65, { clickable: false }, map, tooltip_html);
             return p;
         } // function makeSegmentPolygon
 
@@ -342,6 +343,6 @@ var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "htt
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 // The if ensures that there is no failure in the case of an adblocker
 if (typeof(_gat) == 'object') {
-  var pageTracker = _gat._getTracker("UA-11926785-2");
-  pageTracker._trackPageview();
+    var pageTracker = _gat._getTracker("UA-11926785-2");
+    pageTracker._trackPageview();
 }
