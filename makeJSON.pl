@@ -8,8 +8,7 @@ use Data::Dumper;
 
 my $dbh;
 eval {
-	$dbh = DBI->connect("dbi:SQLite:20101102.water.db");
-	#$dbh = DBI->connect("dbi:SQLite:20101027.water.db");
+	$dbh = DBI->connect("dbi:SQLite:water_1year.db");
 };
 if ($@) {
 	die $@;
