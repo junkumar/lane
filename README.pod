@@ -11,12 +11,29 @@ Fall 2010.
 
 =head1 DESCRIPTION
 
-The files now are simply a reflection of the current work by Nandu 
-for the lane center. More organization to come as the project gets bigger.
+This simple visualization provides information about some major rivers
+in California along with the streamflow information attached to them
+over a period of time.
 
 =head1 BUGS
 
 You better believe it.
+
+=head1 License/Copyright
+
+See LICENSE
+
+=head1 Documentation/Source Code
+
+github.com/junkumar/lane
+
+=head1 Building/Installing
+
+After placing a SQLite file in the directory with the right data, run
+makeJSON.pl to generate data.js.
+
+Simply copy the entire directory including data.js to install on a
+webserver or locally.
 
 =head1 Seeing Visualizations
 
